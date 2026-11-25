@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Supervisión de Aulas | UNICAH</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <section id="login">
+    <div class="login-hero">
+      <div class="brandmark">🏛</div>
+      <h1>Supervisión de<br>Aulas</h1>
+      <p>Plataforma demostrativa para la gestión, supervisión y seguimiento de la asistencia docente de la UNICAH.</p>
+      <div style="margin-top:32px;font-size:12px;color:#bfdbfe">Prototipo académico · Datos simulados</div>
+    </div>
+    <div class="login-card">
+      <div class="login-box">
+        <h2>Bienvenido</h2>
+        <p>Inicie sesión para acceder al sistema</p>
+        <div class="field"><label>Usuario o correo electrónico</label><input id="loginUser"
+            value="supervisor@unicah.edu" placeholder="Ingrese su usuario"></div>
+        <div class="field"><label>Contraseña</label><input id="loginPass" type="password" value="demo123"
+            placeholder="Ingrese su contraseña"></div>
+        <button class="btn btn-primary full" onclick="enterApp()">Iniciar sesión →</button>
+        <div class="demo-note"><strong>Acceso demo:</strong> puede utilizar cualquier usuario y contraseña. No se valida
+          información real.</div>
+      </div>
+    </div>
+  </section>
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="side-brand">
+        <div class="logo">SA</div>
+        <div><strong>Supervisión de Aulas</strong><span>UNICAH · Demo</span></div>
+      </div>
+      <div class="nav-label">Principal</div>
+      <button class="nav-btn active" data-page="dashboard"><span class="nav-ico">▦</span> Dashboard</button>
+      <button class="nav-btn" data-page="supervision"><span class="nav-ico">✓</span> Supervisión de aulas</button>
+      <button class="nav-btn" data-page="teachers"><span class="nav-ico">♙</span> Docentes</button>
+      <button class="nav-btn" data-page="classrooms"><span class="nav-ico">▤</span> Aulas y edificios</button>
+      <div class="nav-label">Gestión académica</div>
+      <button class="nav-btn" data-page="periods"><span class="nav-ico">◷</span> Períodos académicos</button>
+      <button class="nav-btn" data-page="justifications"><span class="nav-ico">✎</span> Justificaciones</button>
+      <button class="nav-btn" data-page="reports"><span class="nav-ico">▥</span> Reportes</button>
+      <div class="nav-label">Administración</div>
+      <button class="nav-btn" data-page="users"><span class="nav-ico">♧</span> Usuarios</button>
+      <button class="nav-btn" data-page="logs"><span class="nav-ico">◴</span> Bitácora</button>
+      <div class="side-bottom">Prototipo demostrativo<br>Versión 1.0 · Datos ficticios</div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div style="display:flex;align-items:center;gap:12px"><button class="mobile-toggle"
+            onclick="toggleSidebar()">☰</button><span class="crumb">UNICAH / <span id="crumb">Dashboard</span></span>
+        </div>
+        <div class="user-chip">
+          <div class="avatar">FG</div><span id="currentUser">Supervisor Demo</span><button class="icon-btn"
+            onclick="logout()" title="Cerrar sesión">↪</button>
+        </div>
+      </header>
+      <div class="content">
+        <section class="section active" id="dashboard">
+          <div class="welcome">
+            <div>
+              <h2>¡Bienvenido al sistema!</h2>
+              <p>Resumen de supervisión docente · Período académico I-2027</p>
+            </div>
+            <div class="welcome-icon">🏫</div>
+          </div>
+          <div class="cards">
+            <div class="stat-card">
+              <div class="stat-top">Supervisiones de hoy <span class="stat-icon">✓</span></div>
+              <div class="stat-num" id="statTotal">24</div>
+              <div class="stat-foot">Registros programados</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top">Docentes presentes <span class="stat-icon"
+                  style="background:#dcfce7;color:#16a34a">♙</span></div>
+              <div class="stat-num" id="statPresent">18</div>
+              <div class="stat-foot">75% de supervisiones</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top">Ausencias <span class="stat-icon" style="background:#fee2e2;color:#dc2626">!</span>
+              </div>
+              <div class="stat-num" id="statAbsent">3</div>
+              <div class="stat-foot">Requieren seguimiento</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top">Pendientes <span class="stat-icon" style="background:#fef3c7;color:#d97706">◷</span>
+              </div>
+              <div class="stat-num" id="statPending">3</div>
+              <div class="stat-foot">Por supervisar</div>
+            </div>
+          </div>
+          <div class="grid2">
+            <div class="panel">
+              <div class="panel-head">
+                <h3>Supervisiones por día</h3><span>Semana actual</span>
+              </div>
+              <div class="chart" id="chart"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <h3>Resumen de asistencia</h3><span>Hoy</span>
+              </div>
+              <div style="display:grid;gap:18px;padding:5px">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px">
+                    <span>Presentes</span><strong id="presentPercent">75%</strong></div>
+                  <div class="progress">
+                    <div style="width:75%;background:#16a34a"></div>
+                  </div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px">
+                    <span>Ausentes</span><strong>12.5%</strong></div>
+                  <div class="progress">
+                    <div style="width:12.5%;background:#dc2626"></div>
+                  </div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px">
+                    <span>Pendientes</span><strong>12.5%</strong></div>
+                  <div class="progress">
+                    <div style="width:12.5%;background:#d97706"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Supervisiones recientes</h3><button class="btn btn-light small" onclick="showPage('supervision')">Ver
+                todas</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Docente</th>
+                    <th>Asignatura</th>
+                    <th>Aula</th>
+                    <th>Horario</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="recentRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <section class="section" id="supervision">
+          <div class="page-head">
+            <div>
+              <h1>Supervisión de aulas</h1>
+              <p>Registro y seguimiento de asistencia docente en las aulas.</p>
+            </div>
+            <div class="head-actions"><button class="btn btn-primary" onclick="openModal('supervisionModal')">＋
+                Registrar supervisión</button></div>
+          </div>
+          <div class="panel">
+            <div class="filters"><input id="supSearch" placeholder="Buscar docente, aula o asignatura..."
+                oninput="renderSupervision()"><select id="supFilter" onchange="renderSupervision()">
+                <option value="">Todos los estados</option>
+                <option>Presente</option>
+                <option>Ausente</option>
+                <option>Pendiente</option>
+              </select></div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Docente</th>
+                    <th>Asignatura</th>
+                    <th>Aula</th>
+                    <th>Horario</th>
+                    <th>Supervisor</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="supRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <section class="section" id="teachers">
+          <div class="page-head">
+            <div>
+              <h1>Docentes</h1>
+              <p>Directorio académico de docentes.</p>
+            </div><button class="btn btn-primary" onclick="openModal('teacherModal')">＋ Agregar docente</button>
+          </div>
+          <div class="panel">
+            <div class="filters"><input id="teacherSearch" placeholder="Buscar docente..." oninput="renderTeachers()">
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Facultad</th>
+                    <th>Correo</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="teacherRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <section class="section" id="classrooms">
+          <div class="page-head">
+            <div>
+              <h1>Aulas y edificios</h1>
+              <p>Administración de espacios académicos.</p>
+            </div><button class="btn btn-primary" onclick="openModal('classroomModal')">＋ Agregar aula</button>
+          </div>
+          <div class="panel">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Aula</th>
+                    <th>Edificio</th>
+                    <th>Capacidad</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="classroomRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <section class="section" id="periods">
+          <div class="page-head">
+            <div>
+              <h1>Períodos académicos</h1>
+              <p>Gestión de períodos y calendario académico.</p>
+            </div><button class="btn btn-primary" onclick="openModal('periodModal')">＋ Nuevo período</button>
+          </div>
+          <div class="panel">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Período</th>
+                    <th>Inicio</th>
+                    <th>Finalización</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody id="periodRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <section class="section" id="justifications">
+          <div class="page-head">
+            <div>
+              <h1>Justificaciones</h1>
+              <p>Registro y revisión de justificaciones de inasistencia.</p>
+            </div><button class="btn btn-primary" onclick="openModal('justificationModal')">＋ Nueva
+              justificación</button>
+          </div>
+          <div class="panel">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Docente</th>
+                    <th>Fecha</th>
+                    <th>Motivo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="justRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <section class="section" id="reports">
+          <div class="page-head">
+            <div>
+              <h1>Reportes</h1>
+              <p>Consolidado demostrativo de asistencia y supervisiones.</p>
+            </div><button class="btn btn-outline" onclick="exportCSV()">⬇ Exportar CSV</button>
+          </div>
+          <div class="panel">
+            <div class="report-summary">
+              <div class="report-box"><strong id="repPresent">18</strong><span>Presentes</span></div>
+              <div class="report-box"><strong id="repAbsent">3</strong><span>Ausentes</span></div>
+              <div class="report-box"><strong id="repPending">3</strong><span>Pendientes</span></div>
+            </div>
+            <div class="panel-head" style="margin-top:25px">
+              <h3>Detalle de registros</h3>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Docente</th>
+                    <th>Aula</th>
+                    <th>Asignatura</th>
+                    <th>Estado</th>
+                    <th>Observación</th>
+                  </tr>
+                </thead>
+                <tbody id="reportRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <section class="section" id="users">
+          <div class="page-head">
+            <div>
+              <h1>Usuarios</h1>
+              <p>Gestión de usuarios y roles del sistema.</p>
+            </div><button class="btn btn-primary" onclick="openModal('userModal')">＋ Nuevo usuario</button>
+          </div>
+          <div class="panel">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Usuario</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="userRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <section class="section" id="logs">
+          <div class="page-head">
+            <div>
+              <h1>Bitácora de acciones</h1>
+              <p>Historial demostrativo de actividad del sistema.</p>
+            </div><button class="btn btn-outline" onclick="clearLogs()">Limpiar demo</button>
+          </div>
+          <div class="panel">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Fecha y hora</th>
+                    <th>Usuario</th>
+                    <th>Acción</th>
+                    <th>Detalle</th>
+                  </tr>
+                </thead>
+                <tbody id="logRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <div class="footer-note">Prototipo académico de demostración · Sistema Web de Supervisión de Aulas · UNICAH
+        </div>
+      </div>
+    </main>
+  </div>
+  <div class="modal-backdrop" id="supervisionModal">
+    <div class="modal">
+      <h2>Registrar supervisión</h2>
+      <div class="field"><label>Docente</label><select id="mTeacher"></select></div>
+      <div class="field"><label>Asignatura</label><input id="mSubject" placeholder="Ej. Programación II"></div>
+      <div class="field"><label>Aula</label><select id="mClassroom"></select></div>
+      <div class="field"><label>Horario</label><input id="mTime" placeholder="08:00 - 09:00"></div>
+      <div class="field"><label>Estado</label><select id="mStatus">
+          <option>Presente</option>
+          <option>Ausente</option>
+          <option>Pendiente</option>
+        </select></div>
+      <div class="field"><label>Observación</label><textarea id="mObservation" rows="2"
+          placeholder="Observaciones..."></textarea></div>
+      <div class="modal-actions"><button class="btn btn-outline"
+          onclick="closeModal('supervisionModal')">Cancelar</button><button class="btn btn-primary"
+          onclick="saveSupervision()">Guardar registro</button></div>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="teacherModal">
+    <div class="modal">
+      <h2>Agregar docente</h2>
+      <div class="field"><label>Nombre completo</label><input id="newTeacherName"></div>
+      <div class="field"><label>Código</label><input id="newTeacherCode"></div>
+      <div class="field"><label>Facultad</label><input id="newTeacherFaculty"></div>
+      <div class="field"><label>Correo</label><input id="newTeacherEmail"></div>
+      <div class="modal-actions"><button class="btn btn-outline"
+          onclick="closeModal('teacherModal')">Cancelar</button><button class="btn btn-primary"
+          onclick="saveTeacher()">Guardar</button></div>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="classroomModal">
+    <div class="modal">
+      <h2>Agregar aula</h2>
+      <div class="field"><label>Nombre del aula</label><input id="newRoom"></div>
+      <div class="field"><label>Edificio</label><input id="newBuilding"></div>
+      <div class="field"><label>Capacidad</label><input id="newCapacity" type="number"></div>
+      <div class="modal-actions"><button class="btn btn-outline"
+          onclick="closeModal('classroomModal')">Cancelar</button><button class="btn btn-primary"
+          onclick="saveClassroom()">Guardar</button></div>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="periodModal">
+    <div class="modal">
+      <h2>Nuevo período académico</h2>
+      <div class="field"><label>Nombre</label><input id="newPeriod"></div>
+      <div class="field"><label>Fecha de inicio</label><input id="periodStart" type="date"></div>
+      <div class="field"><label>Fecha de finalización</label><input id="periodEnd" type="date"></div>
+      <div class="modal-actions"><button class="btn btn-outline"
+          onclick="closeModal('periodModal')">Cancelar</button><button class="btn btn-primary"
+          onclick="savePeriod()">Guardar</button></div>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="justificationModal">
+    <div class="modal">
+      <h2>Nueva justificación</h2>
+      <div class="field"><label>Docente</label><select id="jTeacher"></select></div>
+      <div class="field"><label>Fecha de inasistencia</label><input id="jDate" type="date"></div>
+      <div class="field"><label>Motivo</label><textarea id="jReason" rows="3"></textarea></div>
+      <div class="modal-actions"><button class="btn btn-outline"
+          onclick="closeModal('justificationModal')">Cancelar</button><button class="btn btn-primary"
+          onclick="saveJustification()">Enviar justificación</button></div>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="userModal">
+    <div class="modal">
+      <h2>Nuevo usuario</h2>
+      <div class="field"><label>Nombre</label><input id="newUserName"></div>
+      <div class="field"><label>Usuario</label><input id="newUsername"></div>
+      <div class="field"><label>Rol</label><select id="newUserRole">
+          <option>Administrador</option>
+          <option>Supervisor</option>
+          <option>Docente</option>
+          <option>Decano</option>
+        </select></div>
+      <div class="modal-actions"><button class="btn btn-outline"
+          onclick="closeModal('userModal')">Cancelar</button><button class="btn btn-primary"
+          onclick="saveUser()">Guardar</button></div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
